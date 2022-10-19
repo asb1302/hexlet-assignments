@@ -140,8 +140,11 @@ public class UsersServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
 
-        if ((firstName == null || firstName.isEmpty()) || (lastName == null || lastName.isEmpty())) {
-            response.sendError(422, "asdasd");
+        if (firstName.isEmpty() || lastName.isEmpty()) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/new.jsp");
+            request.setAttribute("error", "Имя и Фамилия не могут быть пустыми");
+            response.setStatus(422);
+            requestDispatcher.forward(request, response);
 
             return;
         }
@@ -151,12 +154,11 @@ public class UsersServlet extends HttpServlet {
         user.put("firstName", firstName);
         user.put("lastName", lastName);
         user.put("email", email);
+        user.put("id", getNextId());
 
         users.add(user);
 
-        request.setAttribute("users", users);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/users.jsp");
-        requestDispatcher.forward(request, response);
+        response.sendRedirect("/users");
         // END
     }
 
@@ -199,7 +201,11 @@ public class UsersServlet extends HttpServlet {
 
         // BEGIN
         if ((firstName == null || firstName.isEmpty()) || (lastName == null || lastName.isEmpty())) {
-            response.sendError(422, "asdasd");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/edit.jsp");
+            request.setAttribute("user", user);
+            request.setAttribute("error", "Имя и Фамилия не могут быть пустыми");
+            response.setStatus(422);
+            requestDispatcher.forward(request, response);
 
             return;
         }
@@ -207,7 +213,7 @@ public class UsersServlet extends HttpServlet {
         user.put("firstName", firstName);
         user.put("lastName", lastName);
         user.put("email", email);
-
+        response.sendRedirect("/users");
         // END
     }
 

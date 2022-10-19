@@ -14,7 +14,7 @@
     <body>
         <div class="container">
             <a href="/users">Все пользователи</a>
-
+            <div>${error}</div>
             <form action='/users/new' method="post">
                 <div class="form-group">
                     <label for="email">Email address</label>
