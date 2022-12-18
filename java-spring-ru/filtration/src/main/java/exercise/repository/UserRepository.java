@@ -23,7 +23,9 @@ public interface UserRepository extends
         // Дополнительная задача
 
         // BEGIN
-        
+        bindings.bind(user.firstName, user.lastName, user.email, user.profession).first(
+                (StringPath path, String value) -> path.containsIgnoreCase(value)
+        );
         // END
     }
 

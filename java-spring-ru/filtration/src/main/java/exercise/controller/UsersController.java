@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // Зависимости для самостоятельной работы
-// import org.springframework.data.querydsl.binding.QuerydslPredicate;
-// import com.querydsl.core.types.Predicate;
+ import org.springframework.data.querydsl.binding.QuerydslPredicate;
+ import com.querydsl.core.types.Predicate;
 
 @RestController
 @RequestMapping("/users")
@@ -20,27 +20,10 @@ public class UsersController {
     private UserRepository userRepository;
 
     // BEGIN
-    @GetMapping(path = "")
-    public Iterable<User> getUsers(
-            @RequestParam(value="firstName", required = false) String firstName,
-            @RequestParam(value="lastName", required = false) String lastName
-    ) {
-        if (null != lastName && null != firstName) {
-            return this.userRepository.findAll(
-                    QUser.user.lastName.likeIgnoreCase("%" + lastName+ "%").and(QUser.user.firstName.likeIgnoreCase("%"+ firstName + "%"))
-            );
-        }
-
-        if (null != firstName) {
-            return this.userRepository.findAll(QUser.user.firstName.likeIgnoreCase("%"+ firstName + "%"));
-        }
-
-        if (null != lastName) {
-            return this.userRepository.findAll(QUser.user.lastName.likeIgnoreCase("%" + lastName+ "%"));
-        }
-
-        return this.userRepository.findAll();
-    }
+     @GetMapping(path = "")
+     public Iterable<User> getUsers(@QuerydslPredicate(root = User.class) Predicate predicate) {
+         return userRepository.findAll(predicate);
+     }
     // END
 }
 
